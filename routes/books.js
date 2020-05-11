@@ -43,9 +43,9 @@ router.get('/:id', asyncHandler(async (req, res, next) => {
     book
         ?res.render('update-book', { book, title: book.title, h1: 'Update' })
         :(err = new Error('Book Page Not Found'), //create 404 status error
-        err.statusCode = 404,
-        checkError = false,
-        next(err))
+            err.statusCode = 404,
+            checkError = false,
+            next(err))
 } ));
 
 /* POST update books info in a database */
@@ -54,7 +54,7 @@ router.post('/:id', asyncHandler(async (req, res) => {
     book = await Book.findByPk(req.params.id); //finds book by its id
     book
         ?(await book.update(req.body),
-        res.redirect('/books/' + book.id))
+            res.redirect('/books/' + book.id))
         :res.sendStatus(404)
 } ));
 
@@ -63,7 +63,7 @@ router.post('/:id/delete', asyncHandler(async (req, res) => {
     const book = await Book.findByPk(req.params.id);
     book
         ?(await book.destroy(),
-        res.redirect('/books'))
+            res.redirect('/books'))
         :res.sendStatus(404)
 } ));
 
