@@ -22,3 +22,7 @@ block content
                     td= book.author
                     td= book.genre
                     td= book.year
+    p
+    - for (var i=0; i<pages; i++ )
+        a.button(href='/books')= i+1
+
