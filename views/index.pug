@@ -4,25 +4,25 @@ block content
     h1 Books
     p
         a.button(href='/books/new') Create New Book
-    form
+    form(action="/books/", method="get")
         input#search(placeholder='search', type='text', name='search')
-        a.button(type='submit') Search
-        table
-            thead
-                tr
-                    th Title
-                    th Author
-                    th Genre
-                    th Year
-            tbody
-            each book in books
-                tr
-                    td
-                        a(href='/books/' + book.id)= book.title
-                    td= book.author
-                    td= book.genre
-                    td= book.year
+        input(type="submit" value="Search")
+    table
+        thead
+            tr
+                th Title
+                th Author
+                th Genre
+                th Year
+        tbody
+        each book in books
+            tr
+                td
+                    a(href='/books/' + book.id)= book.title
+                td= book.author
+                td= book.genre
+                td= book.year
     p
     - for (var i=0; i<pages; i++ )
-        a.button(href='/books')= i+1
+        a.button(href='/books/page/' + i)= i+1
 

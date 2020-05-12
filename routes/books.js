@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Book = require('../models').Book;
+const {Op} = require('sequelize');
 
 //variable checking which error to throw
 let checkError;
@@ -25,13 +26,59 @@ function asyncHandler(callbackF){
 
 /* GET books index */
 router.get('/', asyncHandler(async (req, res) => {
+
+    const search = req.query.search;
+
     howManyBooks = await Book.count();
-    howManyPages = Math.ceil(howManyBooks/pageSize)
+    howManyPages = Math.ceil(howManyBooks/pageSize);
     console.log(howManyBooks);
     console.log(howManyPages);
+
+    if(search){
+        const books = await Book.findAndCountAll({
+            order: [['createdAt', 'DESC']],
+            where: {
+                [Op.or]: {
+                    title: {
+                        [Op.like]: `%${search}%`,
+                    },
+                    author: {
+                        [Op.like]: `%${search}%`,
+                    },
+                    genre: {
+                        [Op.like]: `%${search}%`,
+                    },
+                    year: {
+                        [Op.like]: `%${search}%`,
+                    }
+                }
+            }
+        });
+        res.render('index', {books, title: 'Searched Books'});
+    } else {
+        const books = await Book.findAll({ order: [['createdAt', 'DESC']], limit, offset});
+        res.render('index', {books, title: 'All Books', pages: howManyPages});
+    }
+} ));
+
+
+/* GET the first page of books index */
+router.get('/page/0', (req, res) => {
+    page = 0;
+    res.redirect('/');
+} );
+/* GET the rest pages of books index NOT WORKING AT ALL*/
+router.get('/page/:id', asyncHandler(async (req,res) => {
+
+    page = 1;
+    howManyBooks = await Book.count();
+    howManyPages = Math.ceil(howManyBooks/pageSize)
+
+    console.log(page);
     const books = await Book.findAll({ order: [['createdAt', 'DESC']], limit, offset});
     res.render('index', {books, title: 'All Books', pages: howManyPages});
 } ));
+
 
 /* GET new book form */
 router.get('/new', asyncHandler(async (req, res) => {
@@ -49,7 +96,7 @@ router.post('/new', asyncHandler(async (req, res) => {
 /* GET update book form */
 router.get('/:id', asyncHandler(async (req, res, next) => {
     const book = await Book.findByPk(req.params.id); //finds book by its id
-    // console.log(book);
+    // console.log(req.params.id);
     let err;
     book
         ?res.render('update-book', { book, title: book.title, h1: 'Update' })
