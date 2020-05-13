@@ -4,12 +4,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500&family=Noto+Serif+JP:wght@400;500;600&display=swap');
 
 body {
-  background-color: rgb(255,243,243);
+  background-color: rgb(230,221,222);
   color: rgb(64,61,61);
 }
 
 main {
-  padding: 0px 100px 150px 100px;
+  padding: 0px 150px 200px 150px;
   font: 18px "Noto Sans", sans-serif;
   height: 100%;
   margin-bottom:0;
@@ -37,7 +37,7 @@ a.button, input[type=submit] {
 }
 
 h1{
-  font: 4em "Noto Serif", serif;
+  font: 4.5em "Noto Serif", serif;
   margin-bottom: 0;
   margin-top:0;
 }
@@ -80,6 +80,7 @@ h3.errors {
 }
 
 table {
+  border-bottom: 2px solid rgb(255,166,166);
   width: 100%;
   margin-top: 2em;
 }
@@ -88,6 +89,7 @@ th {
   border-bottom: 2px solid rgb(255,166,166);
   text-align: left;
   padding: 5px 20px 5px 10px;
+  background-color: #F0F0F0;
 }
 
 tr {
@@ -100,7 +102,7 @@ tr:nth-child(2n) {
 
 td {
   padding: 5px 20px 5px 10px;
-  background-color: rgb(255,243,243);
+  background-color: #F0F0F0;
 }
 
 label {
@@ -144,8 +146,8 @@ input.submit {
 }
 
 .header {
-  background-color: rgb(255,243,243);
-  color: rgb(134,179,147);
+  background-color: rgb(230,221,222);
+  color: white;
   text-align: center;
   width: 100%;
   padding-top: 30px;
