@@ -1,17 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const Book = require('../models').Book;
-const {Op} = require('sequelize');
 
 //variable checking which error to throw
 let checkError;
 
-const pageSize = 10;
-let page = 0;
-const offset = page * pageSize;
-const limit = pageSize;
-let howManyBooks;
-let howManyPages;
+// const pageSize = 10;
+// let page = 0;
+// const offset = page * pageSize;
+// const limit = pageSize;
+// let howManyBooks;
+// let howManyPages;
 
 /* Handler function to wrap each route. */
 function asyncHandler(callbackF){
@@ -26,57 +25,12 @@ function asyncHandler(callbackF){
 
 /* GET books index */
 router.get('/', asyncHandler(async (req, res) => {
-
-    const search = req.query.search;
-
-    howManyBooks = await Book.count();
-    howManyPages = Math.ceil(howManyBooks/pageSize);
-    console.log(howManyBooks);
-    console.log(howManyPages);
-
-    if(search){
-        const books = await Book.findAndCountAll({
-            order: [['createdAt', 'DESC']],
-            where: {
-                [Op.or]: {
-                    title: {
-                        [Op.like]: `%${search}%`,
-                    },
-                    author: {
-                        [Op.like]: `%${search}%`,
-                    },
-                    genre: {
-                        [Op.like]: `%${search}%`,
-                    },
-                    year: {
-                        [Op.like]: `%${search}%`,
-                    }
-                }
-            }
-        });
-        res.render('index', {books, title: 'Searched Books'});
-    } else {
-        const books = await Book.findAll({ order: [['createdAt', 'DESC']], limit, offset});
-        res.render('index', {books, title: 'All Books', pages: howManyPages});
-    }
-} ));
-
-
-/* GET the first page of books index */
-router.get('/page/0', (req, res) => {
-    page = 0;
-    res.redirect('/');
-} );
-/* GET the rest pages of books index NOT WORKING AT ALL*/
-router.get('/page/:id', asyncHandler(async (req,res) => {
-
-    page = 1;
-    howManyBooks = await Book.count();
-    howManyPages = Math.ceil(howManyBooks/pageSize)
-
-    console.log(page);
-    const books = await Book.findAll({ order: [['createdAt', 'DESC']], limit, offset});
-    res.render('index', {books, title: 'All Books', pages: howManyPages});
+    // howManyBooks = await Book.count();
+    // howManyPages = Math.ceil(howManyBooks/pageSize)
+    // console.log(howManyBooks);
+    // console.log(howManyPages);
+    const books = await Book.findAll({ order: [['createdAt', 'DESC']]});
+    res.render('index', {books, title: 'All Books'});
 } ));
 
 
@@ -88,9 +42,18 @@ router.get('/new', asyncHandler(async (req, res) => {
 /* POST new book form */
 router.post('/new', asyncHandler(async (req, res) => {
     let book;
-    book = await Book.create(req.body);
-    console.log(req.body);
-    res.redirect('/books/');
+    try {
+        book = await Book.create(req.body);
+        console.log(req.body);
+        res.redirect('/books/');
+    } catch (error){
+        if(error.name === "SequelizeValidationError") { // checking the error
+            book = await Book.build(req.body); // validation error, display the error
+            res.render('new-book', { book, errors: error.errors, title: 'New Book' });
+        } else {
+            throw error; // error caught in the asyncHandler's catch block
+        }
+    }
 } ));
 
 /* GET update book form */

@@ -1,7 +1,7 @@
 extends layout.pug
 
 block content
-    h1= h1
+    h2.title= h1
     form(action="/books/" + book.id, method="post")
         p
             label(for='title') Title

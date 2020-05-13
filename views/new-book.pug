@@ -1,8 +1,8 @@
 extends layout.pug
 
 block content
-    h1 New Book
-    form(action="/books/new", method="post")
+    h2.title New Book
+    form.newBook(action="/books/new", method="post")
 
         include validation-errors
         p
@@ -18,6 +18,6 @@ block content
             label(for='year') Year
             input#year(name='year', type='text')
         p
-            input(type='submit', value='Create New Book')
+            input.submit(type='submit', value='Create New Book')
         p
             a.button(href='/books') Cancel
