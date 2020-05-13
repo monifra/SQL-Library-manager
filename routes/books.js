@@ -89,9 +89,10 @@ router.post('/:id/delete', asyncHandler(async (req, res) => {
 } ));
 
 //error handling
-router.get('*', function(req, res, next) { //for any not existing rout
-    let err = new Error('Page Not Found'); //create 404 status error
+router.use((req, res, next) => { //for any not existing rout
+    let err = new Error('This page doesn\'t exist'); //create 404 status error
     err.statusCode = 404;
+    checkError = false;
     next(err);
 });
 
