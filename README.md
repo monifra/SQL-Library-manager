@@ -17,10 +17,19 @@ CAREFULLY! Changes made in this form are changing book database so when a book i
 - All of the changes in an app will be executed in a database
 
 ### Styling 
-
+- Simple layout with a classy color twist
+- Transitions on button and anchor elements adds modern feeling
+- Friendly coral color error messages that appears on a top of a new book form
+- All clickable elements have different color then the rest of the page elements to make theme more visible 
 ### Setup
-
+1. In the project directory you should run:<br/><br/>
+`npm install`<br/><br/> This will download project dependencies which are listed in package.json.<br/><br/>
+2. To start an app run:<br/><br/>
+    `npm start`<br/><br/>
+    and open in a browser http://localhost:3000. The page will automatically reload when you make changes.
 ## Credits
+This project uses [Sequelize](https://sequelize.org), [Sequelize-cli](https://www.npmjs.com/package/sequelize-cli), [SQLit](https://www.sqlite.org/index.html), [Express](https://expressjs.com) Framework,
+ [Pug](https://pugjs.org/api/getting-started.html) template engine for Node.js and starting files from [Treehouse](https://teamtreehouse.com).   
 
      
 
