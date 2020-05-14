@@ -65,18 +65,26 @@ router.get('/:id', asyncHandler(async (req, res, next) => {
         ?res.render('update-book', { book, title: book.title, h1: 'Update' })
         :(err = new Error('Book Page Not Found'), //create 404 status error
             err.statusCode = 404,
-            checkError = false,
-            next(err))
+            res.render('page-not-found'))
 } ));
 
 /* POST update books info in a database */
 router.post('/:id', asyncHandler(async (req, res) => {
     let book;
-    book = await Book.findByPk(req.params.id); //finds book by its id
-    book
-        ?(await book.update(req.body),
-            res.redirect('/books/' + book.id))
-        :res.sendStatus(404)
+    try {
+        book = await Book.findByPk(req.params.id); //finds book by its id
+        book
+            ? (await book.update(req.body),
+                res.redirect('/books/'))
+            : res.sendStatus(404)
+    } catch (error) {
+        if(error.name === "SequelizeValidationError") { // checking the error
+            book = await Book.build(req.body); // validation error, display the error
+            res.render('update-book', { book, errors: error.errors, title: 'New Book' });
+        } else {
+            throw error; // error caught in the asyncHandler's catch block
+        }
+    }
 } ));
 
 /* POST delete book */
@@ -88,21 +96,29 @@ router.post('/:id/delete', asyncHandler(async (req, res) => {
         :res.sendStatus(404)
 } ));
 
-//error handling
-router.use((req, res, next) => { //for any not existing rout
-    let err = new Error('This page doesn\'t exist'); //create 404 status error
-    err.statusCode = 404;
-    checkError = false;
-    next(err);
-});
+// //error handling
+// router.use((req, res, next) => { //for any not existing rout
+//     let err = new Error('This page doesn\'t exist'); //create 404 status error
+//     err.statusCode = 404;
+//     checkError = false;
+//     next(err);
+// });
 
-/* Error handler */
-router.use((err, req, res, next)=> {
-    res.locals.error = err;
-    console.log('Error: Something went wrong');
-    (checkError === false)
-        ?res.render('page-not-found') //render error page
-        :res.render('error')
-} );
+// router.all((req,res,next) =>  {
+//     let err = new Error('This page doesn\'t exist'); //create 404 status error
+//     err.statusCode = 404;
+//     // checkError = false;
+//     // next(err);
+//     res.render('page-not-found');
+// } );
+//
+// /* Error handler */
+// router.use((err, req, res, next)=> {
+//     res.locals.error = err;
+//     console.log('Error: Something went wrong');
+//     (checkError === false)
+//         ?res.render('page-not-found') //render error page
+//         :res.render('error')
+// } );
 
 module.exports = router;
